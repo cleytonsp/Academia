@@ -1,5 +1,6 @@
 package Main;
 
+import java.util.List;
 import java.util.Scanner;
 
 import Entidades.Atividade;
@@ -28,13 +29,12 @@ public class Main {
     private static SalaService salaService = new SalaService(new SalaRepository());
 
     public static void main(String[] args) {
-
         planoService.cadastrarPlano(new Plano("Semanal", "R$ 35,00", 35.00));
         planoService.cadastrarPlano(new Plano("Mensal", "R$ 100,00", 100.00));
         planoService.cadastrarPlano(new Plano("Anual", "R$ 1000,00", 1000.00));
 
         while (true) {
-            System.out.println("Bem vindo ao menu de gerenciamento da academia:");
+            System.out.println("Bem-vindo ao menu de gerenciamento da academia:");
             System.out.println("1. Gerenciar Membros");
             System.out.println("2. Gerenciar Planos");
             System.out.println("3. Gerenciar Atividades");
@@ -78,6 +78,8 @@ public class Main {
         System.out.println("3. Atualizar Membro");
         System.out.println("4. Remover Membro");
         System.out.println("5. Listar Membros");
+        System.out.println("6. Adicionar Membro à Fila");
+        System.out.println("7. Remover Membro da Fila");
 
         int opcao = scanner.nextInt();
         scanner.nextLine();
@@ -95,15 +97,19 @@ public class Main {
                     System.out.println("Plano não encontrado. Cadastrar plano primeiro.");
                     break;
                 }
-                Membro novoMembro = new Membro(nome, cpf, nome, plano);
+                Membro novoMembro = new Membro(nome, cpf, plano);
                 membroService.cadastrarMembro(novoMembro);
-                System.out.println("Membro cadastrado com sucesso!");
+                // Adiciona automaticamente à fila
+                Membro.adicionarMembroNaFila(novoMembro);
+                System.out.println("Membro cadastrado e adicionado à fila com sucesso!");
                 break;
+
             case 2:
                 System.out.print("ID: ");
                 int id = scanner.nextInt();
                 Membro membro = membroService.buscarMembro(id);
                 if (membro != null) {
+                    System.out.println("ID: " + membro.getId());
                     System.out.println("Nome: " + membro.getNome());
                     System.out.println("CPF: " + membro.getCpf());
                     System.out.println("Plano: " + membro.getPlano().getNome());
@@ -111,6 +117,7 @@ public class Main {
                     System.out.println("Membro não encontrado.");
                 }
                 break;
+
             case 3:
                 System.out.print("ID: ");
                 id = scanner.nextInt();
@@ -137,6 +144,7 @@ public class Main {
                     System.out.println("Membro não encontrado.");
                 }
                 break;
+
             case 4:
                 System.out.print("ID: ");
                 id = scanner.nextInt();
@@ -144,12 +152,35 @@ public class Main {
                 membroService.removerMembro(id);
                 System.out.println("Membro removido com sucesso!");
                 break;
+
             case 5:
                 for (Membro m : membroService.listarMembros()) {
-                    System.out.println("ID: " + m.getId() + ", Nome: " + m.getNome() + ", CPF: " + m.getCpf()
-                            + ", Plano: " + m.getPlano().getNome());
+                    System.out.println("ID: " + m.getId() + ", Nome: " + m.getNome() + ", CPF: " + m.getCpf() +
+                            ", Plano: " + m.getPlano().getNome());
                 }
                 break;
+
+            case 6:
+                System.out.print("ID do Membro: ");
+                id = scanner.nextInt();
+                membro = membroService.buscarMembro(id);
+                if (membro != null) {
+                    Membro.adicionarMembroNaFila(membro);
+                    System.out.println("Membro adicionado à fila com sucesso!");
+                } else {
+                    System.out.println("Membro não encontrado.");
+                }
+                break;
+
+            case 7:
+                Membro removido = Membro.removerMembroDaFila();
+                if (removido != null) {
+                    System.out.println("Membro removido da fila: " + removido.getNome());
+                } else {
+                    System.out.println("Fila vazia.");
+                }
+                break;
+
             default:
                 System.out.println("Opção inválida!");
                 break;
@@ -292,74 +323,78 @@ public class Main {
     }
 
     private static void gerenciarInstrutores() {
-        {
-            System.out.println("Gerenciar Instrutores:");
-            System.out.println("1. Cadastrar Instrutor");
-            System.out.println("2. Buscar Instrutor");
-            System.out.println("3. Atualizar Instrutor");
-            System.out.println("4. Remover Instrutor");
-            System.out.println("5. Listar Instrutores");
+        System.out.println("Gerenciar Instrutores:");
+        System.out.println("1. Cadastrar Instrutor");
+        System.out.println("2. Buscar Instrutor");
+        System.out.println("3. Atualizar Instrutor");
+        System.out.println("4. Remover Instrutor");
+        System.out.println("5. Listar Instrutores");
 
-            int opcao = scanner.nextInt();
-            scanner.nextLine();
+        int opcao = scanner.nextInt();
+        scanner.nextLine(); // Limpa o buffer
 
-            switch (opcao) {
-                case 1:
+        switch (opcao) {
+            case 1:
+                System.out.print("Nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("CPF: ");
+                String cpf = scanner.nextLine();
+                System.out.print("Especialidade: ");
+                String especialidade = scanner.nextLine();
+                Instrutor novoInstrutor = new Instrutor(nome, cpf, especialidade);
+                instrutorService.cadastrarInstrutor(novoInstrutor);
+                System.out.println("Instrutor cadastrado com sucesso!");
+                break;
+            case 2:
+                System.out.print("CPF: ");
+                cpf = scanner.nextLine();
+                Instrutor instrutor = instrutorService.buscarInstrutor(cpf);
+                if (instrutor != null) {
+                    System.out.println("ID: " + instrutor.getId());
+                    System.out.println("Nome: " + instrutor.getNome());
+                    System.out.println("CPF: " + instrutor.getCpf());
+                    System.out.println("Especialidade: " + instrutor.getEspecialidade());
+                } else {
+                    System.out.println("Instrutor não encontrado.");
+                }
+                break;
+            case 3:
+                System.out.print("CPF: ");
+                cpf = scanner.nextLine();
+                instrutor = instrutorService.buscarInstrutor(cpf);
+                if (instrutor != null) {
                     System.out.print("Nome: ");
-                    String nome = scanner.nextLine();
-                    System.out.print("CPF: ");
-                    String cpf = scanner.nextLine();
+                    nome = scanner.nextLine();
                     System.out.print("Especialidade: ");
-                    String especialidade = scanner.nextLine();
-                    Instrutor novoInstrutor = new Instrutor(nome, cpf, especialidade);
-                    instrutorService.cadastrarInstrutor(novoInstrutor);
-                    System.out.println("Instrutor cadastrado com sucesso!");
-                    break;
-                case 2:
-                    System.out.print("CPF: ");
-                    cpf = scanner.nextLine();
-                    Instrutor instrutor = instrutorService.buscarInstrutor(cpf);
-                    if (instrutor != null) {
-                        System.out.println("Nome: " + instrutor.getNome());
-                        System.out.println("CPF: " + instrutor.getCpf());
-                        System.out.println("Especialidade: " + instrutor.getEspecialidade());
-                    } else {
-                        System.out.println("Instrutor não encontrado.");
+                    String especialidade1 = scanner.nextLine();
+                    instrutor.setNome(nome); // Atualiza o nome
+                    instrutor.setEspecialidade(especialidade1); // Atualiza a especialidade
+                    instrutorService.atualizarInstrutor(instrutor);
+                    System.out.println("Instrutor atualizado com sucesso!");
+                } else {
+                    System.out.println("Instrutor não encontrado.");
+                }
+                break;
+            case 4:
+                System.out.print("CPF: ");
+                cpf = scanner.nextLine();
+                instrutorService.removerInstrutor(cpf);
+                System.out.println("Instrutor removido com sucesso!");
+                break;
+            case 5:
+                List<Instrutor> instrutores = instrutorService.listarInstrutores();
+                if (instrutores.isEmpty()) {
+                    System.out.println("Nenhum instrutor cadastrado.");
+                } else {
+                    for (Instrutor i : instrutores) {
+                        System.out.println("ID: " + i.getId() + ", Nome: " + i.getNome() +
+                                ", CPF: " + i.getCpf() + ", Especialidade: " + i.getEspecialidade());
                     }
-                    break;
-                case 3:
-                    System.out.print("CPF: ");
-                    cpf = scanner.nextLine();
-                    instrutor = instrutorService.buscarInstrutor(cpf);
-                    if (instrutor != null) {
-                        System.out.print("Nome: ");
-                        nome = scanner.nextLine();
-                        System.out.print("Especialidade: ");
-                        String especialidade1 = scanner.nextLine();
-                        instrutor.setNome(nome);
-                        instrutor.setEspecialidade(especialidade1);
-                        instrutorService.atualizarInstrutor(instrutor);
-                        System.out.println("Instrutor atualizado com sucesso!");
-                    } else {
-                        System.out.println("Instrutor não encontrado.");
-                    }
-                    break;
-                case 4:
-                    System.out.print("CPF: ");
-                    cpf = scanner.nextLine();
-                    instrutorService.removerInstrutor(cpf);
-                    System.out.println("Instrutor removido com sucesso!");
-                    break;
-                case 5:
-                    for (Instrutor i : instrutorService.listarInstrutores()) {
-                        System.out.println("Nome: " + i.getNome() + ", CPF: " + i.getCpf() + ", Especialidade: "
-                                + i.getEspecialidade());
-                    }
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
-                    break;
-            }
+                }
+                break;
+            default:
+                System.out.println("Opção inválida!");
+                break;
         }
     }
 
@@ -435,24 +470,12 @@ public class Main {
     public static AtividadeService getAtividadeService() {
         return atividadeService;
     }
-
-    public static void setAtividadeService(AtividadeService atividadeService) {
-        MainTeste.atividadeService = atividadeService;
-    }
-
     public static InstrutorService getInstrutorService() {
         return instrutorService;
     }
-
-    public static void setInstrutorService(InstrutorService instrutorService) {
-        MainTeste.instrutorService = instrutorService;
-    }
-
     public static SalaService getSalaService() {
         return salaService;
     }
 
-    public static void setSalaService(SalaService salaService) {
-        MainTeste.salaService = salaService;
-    }
 }
+

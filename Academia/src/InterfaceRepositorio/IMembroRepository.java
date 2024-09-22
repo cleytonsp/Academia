@@ -1,7 +1,6 @@
 package InterfaceRepositorio;
 
 import java.util.List;
-
 import Entidades.Membro;
 
 public interface IMembroRepository {

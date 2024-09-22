@@ -8,9 +8,11 @@ import InterfaceRepositorio.IMembroRepository;
 
 public class MembroRepository implements IMembroRepository {
     private List<Membro> membros = new ArrayList<>();
+    private int contadorId = 1; // Contador para IDs
 
     @Override
     public void adicionarMembro(Membro membro) {
+        membro.setId(contadorId++); // Atribui ID automático
         membros.add(membro);
     }
 

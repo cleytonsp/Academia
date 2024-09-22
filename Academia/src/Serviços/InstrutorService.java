@@ -14,8 +14,8 @@ public class InstrutorService implements IInstrutorService {
     }
 
     @Override
-    public void cadastrarInstrutor1(Instrutor instrutor) {
-        instrutorRepository.adicionarInstrutor(instrutor);
+    public void cadastrarInstrutor(Instrutor instrutor) {
+        instrutorRepository.adicionarInstrutor(instrutor); // Chama o método do repositório
     }
 
     @Override
@@ -24,27 +24,17 @@ public class InstrutorService implements IInstrutorService {
     }
 
     @Override
-    public void atualizarInstrutor1(Instrutor instrutor) {
-        instrutorRepository.atualizarInstrutor(instrutor);
+    public void atualizarInstrutor(Instrutor instrutor) {
+        instrutorRepository.atualizarInstrutor(instrutor); // Atualiza via repositório
     }
 
     @Override
     public void removerInstrutor(String cpf) {
-        instrutorRepository.removerInstrutor(cpf);
+        instrutorRepository.removerInstrutor(cpf); // Remove via repositório
     }
 
     @Override
     public List<Instrutor> listarInstrutores() {
-        return instrutorRepository.listarTodos();
+        return instrutorRepository.listarTodos(); // Retorna lista de instrutores
     }
-
-	@Override
-	public void cadastrarInstrutor(Instrutor instrutor) {
-		
-	}
-
-	@Override
-	public void atualizarInstrutor(Instrutor instrutor) {
-		
-	}
 }

@@ -1,7 +1,6 @@
 package InterfacesdeServiço;
 
 import java.util.List;
-
 import Entidades.Instrutor;
 
 public interface IInstrutorService {
@@ -10,6 +9,4 @@ public interface IInstrutorService {
     void atualizarInstrutor(Instrutor instrutor);
     void removerInstrutor(String cpf);
     List<Instrutor> listarInstrutores();
-	void cadastrarInstrutor1(Instrutor instrutor);
-	void atualizarInstrutor1(Instrutor instrutor);
 }
