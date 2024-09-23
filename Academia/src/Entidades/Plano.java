@@ -19,13 +19,13 @@ public class Plano extends Pessoa {
     }
 
     public Plano(double valor) {
-        super("", ""); // Passando strings vazias para nome e cpf
+        super("", ""); 
         this.descricao = "";
         this.valor = valor;
     }
 
     public Plano() {
-        super("", ""); // Passando strings vazias para nome e cpf
+        super("", ""); 
         this.descricao = "";
         this.valor = 0.0;
     }

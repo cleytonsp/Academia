@@ -11,7 +11,7 @@ public abstract class Pessoa {
     }
 
     public Pessoa() {
-        // Construtor padrão
+       
     }
 
     public void setId(int id) {

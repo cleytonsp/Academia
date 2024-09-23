@@ -1,38 +1,21 @@
 package Entidades;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import Repositorio.MembroRepository;
 
 public class Membro extends Pessoa {
     private Plano plano;
-    private static Queue<Membro> filaMembros = new LinkedList<>(); // Fila para gerenciar membros
-    private static int contadorId = 1; // Contador para IDs
+    private static int contadorId = 1;
 
     public Membro(String nome, String cpf, Plano plano) {
         super(nome, cpf);
         this.plano = plano;
-        super.setId(contadorId++); // Atribui ID automático
-        filaMembros.add(this); // Adiciona na fila automaticamente
+        super.setId(contadorId++); 
+        MembroRepository.adicionarMembroNaFila(this); 
     }
 
     public Membro() {
         super();
         this.plano = null;
-    }
-
-    public static void adicionarMembroNaFila(Membro membro) {
-        filaMembros.add(membro);
-        System.out.println("Membro adicionado à fila: " + membro.getNome());
-    }
-
-    public static Membro removerMembroDaFila() {
-        Membro membroRemovido = filaMembros.poll();
-        if (membroRemovido != null) {
-            System.out.println("Membro removido da fila: " + membroRemovido.getNome());
-        } else {
-            System.out.println("A fila está vazia.");
-        }
-        return membroRemovido;
     }
 
     public Plano getPlano() {

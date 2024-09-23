@@ -11,7 +11,7 @@ public class Atividade extends Pessoa {
 
     // Construtor sobrecarregado
     public Atividade(String nome, String instrutor) {
-        super(nome, ""); // Assume descrição vazia
+        super(nome, "");
         this.instrutor = instrutor;
     }
 
